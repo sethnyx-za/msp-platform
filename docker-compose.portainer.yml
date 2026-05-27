@@ -1,5 +1,3 @@
-version: "3.9"
-
 # Portainer deployment — no nginx, app exposed directly on port 8080
 # Build: Portainer clones this repo and builds the image from ./web/Dockerfile
 # Secrets: set in Portainer stack environment variables (never in this file)
