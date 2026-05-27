@@ -47,7 +47,7 @@ export default async function IntegrationsPage() {
           </div>
           <div className={`text-sm font-medium flex items-center gap-1.5 ${ateraTest.ok ? "text-green-600" : "text-destructive"}`}>
             <span className={`h-2 w-2 rounded-full ${ateraTest.ok ? "bg-green-500" : "bg-red-500"}`} />
-            {ateraTest.ok ? `Connected · ${ateraTest.customerCount} customers` : `Error: ${ateraTest.error}`}
+            {ateraTest.ok ? `Connected · ${"customerCount" in ateraTest ? ateraTest.customerCount : ""} customers` : `Error: ${ateraTest.error}`}
           </div>
         </div>
         <p className="text-sm text-muted-foreground">
