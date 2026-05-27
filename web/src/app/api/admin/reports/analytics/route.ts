@@ -112,10 +112,11 @@ export async function GET(req: NextRequest) {
         ORDER BY asset_count DESC
         LIMIT 10
       `)
-      topOrganizations = (topOrgs.rows ?? topOrgs as unknown as Record<string, unknown>[]).map((r: unknown) => {
-        const row = r as { id: string; name: string; asset_count: number }
-        return { id: row.id, name: row.name, assetCount: row.asset_count }
-      })
+      topOrganizations = (topOrgs as unknown as { id: string; name: string; asset_count: number }[]).map((row) => ({
+        id: row.id,
+        name: row.name,
+        assetCount: row.asset_count,
+      }))
     }
 
     // ── Onboarding quote value trend ───────────────────────────────────────────
@@ -134,14 +135,14 @@ export async function GET(req: NextRequest) {
 
     // ── Normalise trend rows ───────────────────────────────────────────────────
     type TrendRow = { month: string | Date; total: number; completed: number }
-    const trendData = ((trendRows.rows ?? trendRows) as unknown as TrendRow[]).map((r) => ({
+    const trendData = (trendRows as unknown as TrendRow[]).map((r) => ({
       month: typeof r.month === "string" ? r.month.slice(0, 7) : String(r.month).slice(0, 7),
       total: Number(r.total),
       completed: Number(r.completed),
     }))
 
     type QuoteRow = { month: string | Date; total_value: string }
-    const quoteData = ((quoteRows.rows ?? quoteRows) as unknown as QuoteRow[]).map((r) => ({
+    const quoteData = (quoteRows as unknown as QuoteRow[]).map((r) => ({
       month: typeof r.month === "string" ? r.month.slice(0, 7) : String(r.month).slice(0, 7),
       totalValue: Number(r.total_value),
     }))
