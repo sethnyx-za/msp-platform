@@ -44,11 +44,8 @@ function createDb() {
 // The actual Postgres connection is only opened when db.select/insert/etc is called.
 export const db = new Proxy({} as ReturnType<typeof createDb>, {
   get(_target, prop: string | symbol) {
-    const instance =
-      process.env.NODE_ENV === "production"
-        ? (globalThis._db ??= createDb())
-        : (globalThis._db ??= createDb())
-    return (instance as Record<string | symbol, unknown>)[prop]
+    const instance = (globalThis._db ??= createDb())
+    return Reflect.get(instance, prop)
   },
 })
 
