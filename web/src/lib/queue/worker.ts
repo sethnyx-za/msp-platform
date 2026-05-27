@@ -9,7 +9,7 @@
  */
 
 import { Worker } from "bullmq"
-import { getRedis } from "@/lib/redis"
+import { getBullMQConnection } from "./connection"
 import { QUEUE_NAMES, type SyncJobData } from "./index"
 import { runAteraSync } from "./workers/atera-worker"
 import { runUnifiSync } from "./workers/unifi-worker"
@@ -44,10 +44,10 @@ export function startSyncWorker(): Worker<SyncJobData> {
       }
     },
     {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       concurrency: 5, // Process up to 5 orgs in parallel
     }
-  ) as unknown as Worker<SyncJobData>
+  )
 
   _worker.on("completed", (job) => {
     console.log(`[Worker] ✓ Job ${job.id} completed (${job.data.integrationType}:${job.data.organizationId})`)

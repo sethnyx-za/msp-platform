@@ -10,7 +10,7 @@
  */
 
 import { Worker } from "bullmq"
-import { getRedis } from "@/lib/redis"
+import { getBullMQConnection } from "../connection"
 import { QUEUE_NAMES } from "../index"
 import { processImapReplies } from "@/lib/services/imap"
 
@@ -27,7 +27,7 @@ export function startImapWorker(): Worker {
       console.log(`[ImapWorker] Poll complete: processed=${result.processed} errors=${result.errors}`)
     },
     {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       concurrency: 1, // Only one IMAP poll at a time
     }
   )

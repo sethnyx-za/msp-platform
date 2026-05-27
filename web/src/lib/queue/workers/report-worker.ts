@@ -9,7 +9,7 @@
  */
 
 import { Worker } from "bullmq"
-import { getRedis } from "@/lib/redis"
+import { getBullMQConnection } from "../connection"
 import { QUEUE_NAMES, type ReportJobData } from "../index"
 import { generateReportPdf, getReportPdfPath } from "@/lib/services/pdf"
 import { db } from "@/lib/db"
@@ -46,10 +46,10 @@ export function startReportWorker(): Worker<ReportJobData> {
       }
     },
     {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       concurrency: 2,
     }
-  ) as unknown as Worker<ReportJobData>
+  )
 
   _worker.on("completed", (job) => {
     console.log(`[ReportWorker] ✓ Report ${job.data.reportId} generated`)

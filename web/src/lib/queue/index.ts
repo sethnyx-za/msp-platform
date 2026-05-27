@@ -1,12 +1,12 @@
 /**
  * BullMQ queue definitions
  *
- * All queues share the same Redis connection.
+ * Each queue/worker gets its own BullMQ connection (parsed from REDIS_URL).
  * Workers are started via src/instrumentation.ts when the Next.js server boots.
  */
 
 import { Queue, QueueEvents } from "bullmq"
-import { getRedis } from "@/lib/redis"
+import { getBullMQConnection } from "./connection"
 
 // ─── Job payload types ────────────────────────────────────────────────────────
 
@@ -40,14 +40,14 @@ let _imapQueue: Queue | null = null
 export function getSyncQueue(): Queue<SyncJobData> {
   if (!_syncQueue) {
     _syncQueue = new Queue(QUEUE_NAMES.SYNC, {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       defaultJobOptions: {
         attempts: 3,
         backoff: { type: "exponential", delay: 5000 }, // 5s, 10s, 20s
         removeOnComplete: { count: 100 },
         removeOnFail: { count: 200 },
       },
-    }) as unknown as Queue<SyncJobData>
+    })
   }
   return _syncQueue
 }
@@ -55,7 +55,7 @@ export function getSyncQueue(): Queue<SyncJobData> {
 export function getSyncQueueEvents(): QueueEvents {
   if (!_syncQueueEvents) {
     _syncQueueEvents = new QueueEvents(QUEUE_NAMES.SYNC, {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
     })
   }
   return _syncQueueEvents
@@ -122,14 +122,14 @@ export async function removeRepeatableSync(
 export function getReportQueue(): Queue<ReportJobData> {
   if (!_reportQueue) {
     _reportQueue = new Queue(QUEUE_NAMES.REPORTS, {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       defaultJobOptions: {
         attempts: 2,
         backoff: { type: "fixed", delay: 10000 },
         removeOnComplete: { count: 50 },
         removeOnFail: { count: 100 },
       },
-    }) as unknown as Queue<ReportJobData>
+    })
   }
   return _reportQueue
 }
@@ -146,7 +146,7 @@ export async function enqueueReportJob(data: ReportJobData) {
 export function getImapQueue(): Queue {
   if (!_imapQueue) {
     _imapQueue = new Queue(QUEUE_NAMES.IMAP, {
-      connection: getRedis(),
+      connection: getBullMQConnection(),
       defaultJobOptions: {
         attempts: 2,
         removeOnComplete: { count: 20 },
