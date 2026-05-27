@@ -12,7 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 import { useDebounce } from "@/lib/hooks/useDebounce"
-import type { ApiResponse, PaginatedResponse } from "@/types"
+import type { PaginatedResponse } from "@/types"
 import ClientDialog from "./ClientDialog"
 import Link from "next/link"
 
@@ -40,7 +40,7 @@ export default function ClientsTable() {
   const [editTarget, setEditTarget] = useState<Organization | null>(null)
   const [deactivateTarget, setDeactivateTarget] = useState<Organization | null>(null)
 
-  const { data, isLoading } = useQuery<ApiResponse<PaginatedResponse<Organization>>>({
+  const { data, isLoading } = useQuery<PaginatedResponse<Organization>>({
     queryKey: ["admin-clients", dSearch, page],
     queryFn: () =>
       fetch(`/api/admin/clients?search=${encodeURIComponent(dSearch)}&page=${page}&limit=20`).then((r) => r.json()),
