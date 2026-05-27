@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, { params }: Params) {
   const buffer = await readFile(pdfPath)
   const safeTitle = report.title.replace(/[^a-zA-Z0-9\s-_]/g, "").replace(/\s+/g, "_")
 
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `attachment; filename="${safeTitle}.pdf"`,

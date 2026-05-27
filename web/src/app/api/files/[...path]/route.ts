@@ -45,7 +45,7 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     const mimeType = await getUploadMimeType(relativePath)
     const filename = path.basename(relativePath)
 
-    return new NextResponse(buffer, {
+    return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {
         "Content-Type": mimeType,
