@@ -79,7 +79,7 @@ export async function processImapReplies(): Promise<{
 
         // Mark as seen regardless of processing outcome
         try {
-          await client.messageFlagsAdd({ uid }, ["\\Seen"])
+          await client.messageFlagsAdd(String(uid), ["\\Seen"], { uid: true })
         } catch {
           // Non-critical
         }
@@ -106,8 +106,9 @@ async function processMessage(
 ): Promise<boolean> {
   // Fetch full message
   const msgData = await client.fetchOne(
-    { uid },
-    { envelope: true, bodyParts: ["TEXT"] }
+    String(uid),
+    { envelope: true, bodyParts: ["TEXT"] },
+    { uid: true }
   )
 
   if (!msgData) return false
