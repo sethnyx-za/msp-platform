@@ -71,7 +71,9 @@ export async function getOrganizationBySlug(slug: string) {
   return org ?? null
 }
 
-export async function getClientOrganizations(params: PaginationParams & { search?: string }) {
+export async function getClientOrganizations(
+  params: PaginationParams & { search?: string; parentId?: string | null }
+) {
   return getOrganizations({ ...params, isMspOrg: false })
 }
 
