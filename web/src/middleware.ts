@@ -1,8 +1,12 @@
-import { auth } from "@/auth"
+import NextAuth from "next-auth"
+import { authConfig } from "@/auth.config"
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 import { getRequiredRole, hasMinRole } from "@/lib/auth/rbac"
 import type { UserRole } from "@/types"
+
+// Initialise NextAuth from the edge-safe config (no ioredis / bcryptjs)
+const { auth } = NextAuth(authConfig)
 
 const PUBLIC_PATHS = ["/login", "/api/auth", "/api/health", "/_next", "/favicon.ico"]
 
@@ -55,7 +59,7 @@ export default auth((req) => {
   // ── Forward user context to API routes via headers ────────────────────────
   const requestHeaders = new Headers(req.headers)
   requestHeaders.set("x-user-id", session.user.id)
-  requestHeaders.set("x-user-email", session.user.email)
+  requestHeaders.set("x-user-email", session.user.email ?? "")
   requestHeaders.set("x-user-role", session.user.role)
   requestHeaders.set("x-org-id", session.user.organizationId)
   requestHeaders.set("x-is-msp-staff", String(session.user.isMspStaff))

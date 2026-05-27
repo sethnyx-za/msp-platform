@@ -38,6 +38,11 @@ export const redis =
     ? createRedisClient()
     : (globalThis._redis ??= createRedisClient())
 
+/** Returns the singleton Redis client. Used by BullMQ queues and workers. */
+export function getRedis(): Redis {
+  return redis
+}
+
 // ─── Typed key helpers ────────────────────────────────────────────────────────
 // Centralised key names prevent typos and make it easy to find all Redis usage.
 

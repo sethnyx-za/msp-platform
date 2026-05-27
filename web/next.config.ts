@@ -3,11 +3,7 @@ import type { NextConfig } from "next"
 const nextConfig: NextConfig = {
   output: "standalone",
 
-  // Enable the instrumentation hook (src/instrumentation.ts)
-  // This starts BullMQ workers and the sync scheduler on server boot
-  experimental: {
-    instrumentationHook: true,
-  },
+  // instrumentationHook is now stable in Next.js 15 — no experimental flag needed
 
   images: {
     remotePatterns: [

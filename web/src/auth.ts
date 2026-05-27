@@ -1,58 +1,21 @@
+/**
+ * Full server-side auth config
+ *
+ * Extends authConfig with the Credentials provider that uses ioredis +
+ * bcryptjs.  Only import this from server components and API routes — never
+ * from middleware (use authConfig directly there).
+ */
+
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import { authConfig } from "./auth.config"
 import { db } from "@/lib/db"
 import { users, userOrganizationMemberships, organizations } from "@/lib/db/schema"
 import { eq, and } from "drizzle-orm"
 import { redis, RedisKeys } from "@/lib/redis"
-import type { UserRole } from "@/types"
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt", maxAge: Number(process.env.SESSION_MAX_AGE ?? 28800) },
-
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
-
-  callbacks: {
-    // ── Enrich JWT with user profile + org context ────────────────────────
-    async jwt({ token, user }) {
-      if (user) {
-        // On sign-in, copy all custom fields from the User object to the token
-        token.id = user.id
-        token.role = user.role
-        token.isMspStaff = user.isMspStaff
-        token.organizationId = user.organizationId
-        token.organizationName = user.organizationName
-        token.organizationSlug = user.organizationSlug
-        token.organizationLogoUrl = user.organizationLogoUrl
-        token.crossOrgAccess = user.crossOrgAccess
-        token.accessibleOrgIds = user.accessibleOrgIds
-        token.theme = user.theme
-        token.colorSwatch = user.colorSwatch
-      }
-      return token
-    },
-
-    // ── Expose JWT fields on the session object ───────────────────────────
-    async session({ session, token }) {
-      session.user = {
-        ...session.user,
-        id: token.id as string,
-        role: token.role as UserRole,
-        isMspStaff: token.isMspStaff as boolean,
-        organizationId: token.organizationId as string,
-        organizationName: token.organizationName as string,
-        organizationSlug: token.organizationSlug as string,
-        organizationLogoUrl: token.organizationLogoUrl as string | null,
-        crossOrgAccess: token.crossOrgAccess as boolean,
-        accessibleOrgIds: token.accessibleOrgIds as string[],
-        theme: token.theme as "light" | "dark" | "system",
-        colorSwatch: token.colorSwatch as string | null,
-      }
-      return session
-    },
-  },
+  ...authConfig,
 
   providers: [
     Credentials({
@@ -116,7 +79,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           avatarUrl: user.avatarUrl,
-          role: anyMembership.role as UserRole,
+          role: anyMembership.role,
           isMspStaff: user.isMspStaff,
           organizationId: org.id,
           organizationName: org.name,
