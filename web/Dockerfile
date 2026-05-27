@@ -5,9 +5,9 @@ WORKDIR /app
 # ─── Dependencies ─────────────────────────────────────────────────────────────
 FROM base AS deps
 COPY package.json package-lock.json* ./
-RUN npm ci --only=production --ignore-scripts && \
+RUN npm install --omit=dev --ignore-scripts && \
     cp -r node_modules /tmp/prod_modules && \
-    npm ci --ignore-scripts
+    npm install --ignore-scripts
 
 # ─── Builder ──────────────────────────────────────────────────────────────────
 FROM base AS builder
