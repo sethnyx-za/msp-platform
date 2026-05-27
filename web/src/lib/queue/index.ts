@@ -39,7 +39,7 @@ let _imapQueue: Queue | null = null
 
 export function getSyncQueue(): Queue<SyncJobData> {
   if (!_syncQueue) {
-    _syncQueue = new Queue<SyncJobData>(QUEUE_NAMES.SYNC, {
+    _syncQueue = new Queue(QUEUE_NAMES.SYNC, {
       connection: getRedis(),
       defaultJobOptions: {
         attempts: 3,
@@ -47,7 +47,7 @@ export function getSyncQueue(): Queue<SyncJobData> {
         removeOnComplete: { count: 100 },
         removeOnFail: { count: 200 },
       },
-    })
+    }) as unknown as Queue<SyncJobData>
   }
   return _syncQueue
 }
@@ -121,7 +121,7 @@ export async function removeRepeatableSync(
 
 export function getReportQueue(): Queue<ReportJobData> {
   if (!_reportQueue) {
-    _reportQueue = new Queue<ReportJobData>(QUEUE_NAMES.REPORTS, {
+    _reportQueue = new Queue(QUEUE_NAMES.REPORTS, {
       connection: getRedis(),
       defaultJobOptions: {
         attempts: 2,
@@ -129,7 +129,7 @@ export function getReportQueue(): Queue<ReportJobData> {
         removeOnComplete: { count: 50 },
         removeOnFail: { count: 100 },
       },
-    })
+    }) as unknown as Queue<ReportJobData>
   }
   return _reportQueue
 }

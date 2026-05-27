@@ -47,7 +47,7 @@ export function startSyncWorker(): Worker<SyncJobData> {
       connection: getRedis(),
       concurrency: 5, // Process up to 5 orgs in parallel
     }
-  )
+  ) as unknown as Worker<SyncJobData>
 
   _worker.on("completed", (job) => {
     console.log(`[Worker] ✓ Job ${job.id} completed (${job.data.integrationType}:${job.data.organizationId})`)

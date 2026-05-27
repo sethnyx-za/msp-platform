@@ -49,7 +49,7 @@ export function startReportWorker(): Worker<ReportJobData> {
       connection: getRedis(),
       concurrency: 2,
     }
-  )
+  ) as unknown as Worker<ReportJobData>
 
   _worker.on("completed", (job) => {
     console.log(`[ReportWorker] ✓ Report ${job.data.reportId} generated`)
