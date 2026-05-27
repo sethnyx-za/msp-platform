@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Next.js Dev (Turbopack)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "./web",
+      "port": 3000
+    },
+    {
+      "name": "Drizzle Studio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "db:studio"],
+      "cwd": "./web",
+      "port": 4983
+    }
+  ]
+}

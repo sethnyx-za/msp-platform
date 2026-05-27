@@ -1,0 +1,31 @@
+version: "3.9"
+
+# LAN deployment overlay — HTTP only, port 8080 (TrueNAS uses 80/443 itself)
+# Usage: docker compose -f docker-compose.yml -f docker-compose.lan.yml up -d
+#
+# To add SSL/domain later:
+#   1. Point your domain at this machine's WAN IP
+#   2. Forward ports 80 + 443 to TrueNAS:8080/8443
+#   3. Replace nginx.lan.conf with nginx.conf and set your domain
+#   4. Run certbot to issue the cert
+
+services:
+  nginx:
+    profiles: []    # un-disable nginx (it's disabled in dev)
+    ports:
+      - "8080:80"   # app accessible at http://10.50.49.15:8080
+    volumes:
+      - ./nginx/nginx.lan.conf:/etc/nginx/nginx.conf:ro
+    # Remove certbot volume mounts — not needed for HTTP
+    volumes:
+      - ./nginx/nginx.lan.conf:/etc/nginx/nginx.conf:ro
+
+  # Disable SSL-only services
+  certbot:
+    profiles: ["disabled"]
+
+  # Expose postgres on LAN for DB tools (TablePlus, DBeaver, etc.)
+  # Remove these lines if you don't want DB access from the network
+  postgres:
+    ports:
+      - "5432:5432"

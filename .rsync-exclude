@@ -1,0 +1,8 @@
+# Files to exclude when copying to TrueNAS via rsync/scp
+.git/
+web/node_modules/
+web/.next/
+web/.turbo/
+*.log
+.DS_Store
+Thumbs.db

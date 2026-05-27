@@ -1,0 +1,42 @@
+# Copy this file to rclone.conf and fill in your credentials.
+# Each [section] is one backup destination. Add as many as needed.
+# All configured remotes will receive backups automatically.
+
+# ─── S3 (AWS / Backblaze B2 / Wasabi / MinIO) ────────────────────────────────
+# [s3-backblaze]
+# type = s3
+# provider = Backblaze
+# access_key_id = YOUR_KEY_ID
+# secret_access_key = YOUR_SECRET_KEY
+# endpoint = s3.us-west-004.backblazeb2.com
+# region = us-west-004
+
+# ─── SFTP ─────────────────────────────────────────────────────────────────────
+# [sftp-nas]
+# type = sftp
+# host = your-nas-or-server.local
+# user = backup_user
+# port = 22
+# key_file = /root/.ssh/id_rsa
+
+# ─── OneDrive ─────────────────────────────────────────────────────────────────
+# [onedrive]
+# type = onedrive
+# token = {"access_token":"...","expiry":"..."}
+# drive_id = YOUR_DRIVE_ID
+# drive_type = personal
+
+# ─── Google Drive ─────────────────────────────────────────────────────────────
+# [gdrive]
+# type = drive
+# client_id = YOUR_CLIENT_ID
+# client_secret = YOUR_CLIENT_SECRET
+# scope = drive
+# token = {"access_token":"...","expiry":"..."}
+# root_folder_id = YOUR_FOLDER_ID
+
+# ─── Local (additional local path) ───────────────────────────────────────────
+# [local-nas]
+# type = local
+# copy_links = false
+# no_unicode_normalization = false
