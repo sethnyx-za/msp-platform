@@ -122,7 +122,7 @@ async function seed() {
       primaryColor: "#3B82F6",
       accentColor: "#1E40AF",
       defaultTheme: "system",
-      reportHeaderText: "Monthly IT Infrastructure Report",
+      reportHeaderHtml: "<h1>Monthly IT Infrastructure Report</h1>",
       supportEmail: "support@msp.local",
     })
     .onConflictDoNothing()
